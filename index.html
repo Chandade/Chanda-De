@@ -3,52 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>চান্দা দে - Chanda De</title>
+    <title>চান্দা দে - 3D Edition</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #1e272c;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
-            text-align: center;
             overflow: hidden;
+            background: #1e272c;
+            font-family: Arial, sans-serif;
+            text-align: center;
         }
 
         #landing-screen {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800') no-repeat center center/cover;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800') no-repeat center center/cover;
-            padding: 20px;
+            z-index: 10;
+            color: white;
         }
 
         .title-box h1 {
-            font-size: 45px;
+            font-size: 50px;
             color: #f1c40f;
             text-shadow: 3px 3px #c0392b;
-            margin-bottom: 5px;
-        }
-
-        .tagline {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ecf0f1;
-            margin-bottom: 15px;
-            background: rgba(0,0,0,0.5);
-            padding: 5px 15px;
-            border-radius: 5px;
-        }
-
-        .rules {
-            font-size: 14px;
-            color: #bdc3c7;
-            max-width: 400px;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            text-align: left;
+            margin-bottom: 0;
         }
 
         .start-btn {
@@ -60,85 +43,58 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        #game-screen {
+        #game-ui {
             display: none;
-            position: relative;
+            position: absolute;
             width: 100%;
-            max-width: 450px;
-            margin: auto;
-            height: 100vh;
-            background: #2f3640;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
         }
 
         .top-bar {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 15px;
-            background: rgba(0,0,0,0.7);
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        canvas {
-            display: block;
-            background: #596275;
-            margin: auto;
-        }
-
-        /* Joystick & On-screen controls */
-        .controls-overlay {
             position: absolute;
-            bottom: 15px;
+            top: 10px;
             width: 100%;
             display: flex;
             justify-content: space-around;
-            align-items: center;
-            padding: 0 10px;
-            box-sizing: border-box;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px #000;
         }
 
-        .joystick-pad {
-            display: grid;
-            grid-template-columns: repeat(3, 40px);
-            gap: 5px;
-            justify-content: center;
+        .controls-overlay {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            pointer-events: auto;
         }
 
-        .joy-btn {
+        .joy-btn, .action-btn {
             background: rgba(0,0,0,0.7);
             color: white;
             border: 2px solid #f1c40f;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 15px 25px;
+            border-radius: 30px;
             font-weight: bold;
             font-size: 16px;
             cursor: pointer;
         }
 
-        .action-btns {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
         .action-btn {
             background: #27ae60;
-            color: white;
-            border: 2px solid #2ecc71;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .hide-btn {
-            background: #e67e22;
-            border-color: #f39c12;
+            border-color: #2ecc71;
         }
     </style>
+    <!-- Three.js Library for True 3D Graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -146,228 +102,117 @@
     <div id="landing-screen">
         <div class="title-box">
             <h1>চান্দা দে</h1>
-            <p>CHANDA DE (Dhaka Edition)</p>
+            <p>3D Dhaka Edition</p>
         </div>
-        <div class="tagline">রাস্তা কি আপনার বাপের? আগে চাঁদা দেন!</div>
-        <div class="rules">
-            🛺 গাড়ি ও রিকশা থামিয়ে চাঁদা তুলুন。<br>
-            👥 সাথে থাকবে আপনার গেন্দা/সঙগীরা।<br>
-            🏠 সেনা বা পুলিশ আসলে রাস্তার পাশের ঘরে লুকিয়ে যান!<br>
-            🕹️ জয়েস্টিক দিয়ে চারদিকে ঘোরাফেরা করুন।
-        </div>
+        <p>রাস্তা কি আপনার বাপের? আগে চাঁদা দেন!</p>
         <button class="start-btn" onclick="startGame()">রাস্তায় নামেন</button>
     </div>
 
-    <!-- Game Screen -->
-    <div id="game-screen">
+    <!-- Game UI Overlay -->
+    <div id="game-ui">
         <div class="top-bar">
             <div>চাঁদা: <span id="score">0</span>৳</div>
-            <div id="status-msg" style="color:#f1c40f;">অবস্থা: রাস্তায় সক্রিয়</div>
+            <div id="status">অবস্থা: রাস্তায় সক্রিয়</div>
             <div>লাইফ: <span id="lives">❤️❤️❤️</span></div>
         </div>
 
-        <canvas id="gameCanvas" width="420" height="480"></canvas>
-
-        <!-- Controller & Actions -->
         <div class="controls-overlay">
-            <div class="joystick-pad">
-                <div></div>
-                <button class="joy-btn" ontouchstart="setMove(0, -3)" onmousedown="setMove(0, -3)">⬆️</button>
-                <div></div>
-                <button class="joy-btn" ontouchstart="setMove(-3, 0)" onmousedown="setMove(-3, 0)">⬅️</button>
-                <button class="joy-btn" onclick="stopMove()">⏹️</button>
-                <button class="joy-btn" ontouchstart="setMove(3, 0)" onmousedown="setMove(3, 0)">➡️</button>
-                <div></div>
-                <button class="joy-btn" ontouchstart="setMove(0, 3)" onmousedown="setMove(0, 3)">⬇️</button>
-                <div></div>
-            </div>
-
-            <div class="action-btns">
-                <button class="action-btn" onclick="collectChanda()">💵 চাঁদা তুলুন</button>
-                <button class="action-btn hide-btn" onclick="toggleHideout()">🏠 ঘরে লুকান</button>
-            </div>
+            <button class="joy-btn" onclick="movePlayer(-1)">◀ বামে</button>
+            <button class="action-btn" onclick="collectChanda()">💵 চাঁদা তুলুন</button>
+            <button class="joy-btn" onclick="movePlayer(1)">ডানে ▶</button>
         </div>
     </div>
 
     <script>
+        let scene, camera, renderer;
+        let player, gundas = [];
+        let score = 0, lives = 3;
+        let gameActive = false;
+
         function startGame() {
             document.getElementById('landing-screen').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'block';
-            initGame();
+            document.getElementById('game-ui').style.display = 'block';
+            init3D();
         }
 
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
+        function init3D() {
+            // Scene Setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x2f3640);
 
-        let score = 0;
-        let lives = 3;
-        let isHidden = false;
+            // Camera Setup (Isometric 3D View)
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 10, 15);
+            camera.lookAt(0, 0, 0);
 
-        // Player & Gang (Gunda)
-        let player = { x: 200, y: 350, vx: 0, vy: 0, radius: 18 };
-        let gundas = [
-            { offsetX: -25, offsetY: 15 },
-            { offsetX: 25, offsetY: 15 }
-        ];
+            // Renderer Setup
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
 
-        let obstacles = [];
-        let gameRunning = false;
+            // Light
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(5, 10, 7);
+            scene.add(directionalLight);
 
-        function setMove(vx, vy) {
-            if (!isHidden) {
-                player.vx = vx;
-                player.vy = vy;
-            }
+            // 3D Road
+            const roadGeometry = new THREE.PlaneGeometry(10, 50);
+            const roadMaterial = new THREE.MeshStandardMaterial({ color: 0x353b48 });
+            const road = new THREE.Mesh(roadGeometry, roadMaterial);
+            road.rotation.x = -Math.PI / 2;
+            scene.add(road);
+
+            // 3D Buildings on Sides (Safe Houses / Dhaka Buildings)
+            const buildingGeo = new THREE.BoxGeometry(4, 8, 10);
+            const buildingMat = new THREE.MeshStandardMaterial({ color: 0xb33939 });
+            
+            const leftBuilding = new THREE.Mesh(buildingGeo, buildingMat);
+            leftBuilding.position.set(-7, 4, 0);
+            scene.add(leftBuilding);
+
+            const rightBuilding = new THREE.Mesh(buildingGeo, buildingMat);
+            rightBuilding.position.set(7, 4, 0);
+            scene.add(rightBuilding);
+
+            // 3D Player Character (Chandabaz)
+            const playerGeo = new THREE.BoxGeometry(1.2, 1.8, 1.2);
+            const playerMat = new THREE.MeshStandardMaterial({ color: 0xe84118 });
+            player = new THREE.Mesh(playerGeo, playerMat);
+            player.position.set(0, 1, 4);
+            scene.add(player);
+
+            gameActive = true;
+            animate();
         }
 
-        function stopMove() {
-            player.vx = 0;
-            player.vy = 0;
-        }
-
-        // Hideout mechanic (Lukanor ghor)
-        function toggleHideout() {
-            // Check if player is near the left or right side hideout house (e.g., x < 80 or x > 320)
-            if (player.x < 90 || player.x > 310) {
-                isHidden = !isHidden;
-                if (isHidden) {
-                    player.vx = 0; player.vy = 0;
-                    document.getElementById("status-msginnerText") = "অবস্থা: ঘরের ভেতর লুকানো!";
-                    document.getElementById("status-msg").innerText = "অবস্থা: ঘরে নিরাপদ 🏠";
-                } else {
-                    document.getElementById("status-msg").innerText = "অবস্থা: রাস্তায় সক্রিয়";
-                }
-            } else {
-                alert("লুকানোর ঘরের কাছাকাছি যান (রাস্তার দুই পাশের ঘরে)!");
+        function movePlayer(direction) {
+            if (player) {
+                player.position.x += direction * 1.5;
+                if (player.position.x < -3.5) player.position.x = -3.5;
+                if (player.position.x > 3.5) player.position.x = 3.5;
             }
         }
 
         function collectChanda() {
-            if (isHidden) return;
-            score += 50;
+            score += 100;
             document.getElementById("score").innerText = score;
         }
 
-        function initGame() {
-            gameRunning = true;
-            loop();
+        function animate() {
+            if (!gameActive) return;
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
         }
 
-        function loop() {
-            if (!gameRunning) return;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 1. Draw Sidewalks & Hideout Houses (Lukanor ghor)
-            ctx.fillStyle = "#4b6584";
-            ctx.fillRect(0, 0, 70, canvas.height); // Left sidewalk & house zone
-            ctx.fillRect(canvas.width - 70, 0, 70, canvas.height); // Right sidewalk & house zone
-
-            // Draw Houses / Buildings on sides
-            ctx.fillStyle = "#84817a";
-            ctx.fillRect(10, 50, 50, 100); // Left House
-            ctx.fillRect(canvas.width - 60, 200, 50, 100); // Right House
-            
-            ctx.fillStyle = "#f1c40f";
-            ctx.font = "11px Arial";
-            ctx.fillText("🏠 সেফ হাউজ", 5, 40);
-            ctx.fillText("🏠 লুকানোর ঘর", canvas.width - 65, 190);
-
-            // Road surface
-            ctx.fillStyle = "#222f3e";
-            ctx.fillRect(70, 0, canvas.width - 140, canvas.height);
-
-            // Center road markings
-            ctx.strokeStyle = "#ffdd59";
-            ctx.lineWidth = 3;
-            ctx.setLineDash([15, 15]);
-            ctx.beginPath();
-            ctx.moveTo(canvas.width / 2, 0);
-            ctx.lineTo(canvas.width / 2, canvas.height);
-            ctx.stroke();
-
-            // 2. Move Player freely if not hidden
-            if (!isHidden) {
-                player.x += player.vx;
-                player.y += player.vy;
-
-                // Boundaries
-                if (player.x < 75) player.x = 75;
-                if (player.x > canvas.width - 75) player.x = canvas.width - 75;
-                if (player.y < 30) player.y = 30;
-                if (player.y > canvas.height - 40) player.y = canvas.height - 40;
+        window.addEventListener('resize', () => {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
             }
-
-            // 3. Draw Vehicles & Army/Police
-            if (Math.random() < 0.025) {
-                let types = ['cng', 'rickshaw', 'army'];
-                let type = types[Math.floor(Math.random() * types.length)];
-                obstacles.push({
-                    x: 90 + Math.random() * 200,
-                    y: -80,
-                    type: type,
-                    speed: type === 'army' ? 3.5 : 2
-                });
-            }
-
-            obstacles.forEach((obs, index) => {
-                obs.y += obs.speed;
-
-                // Draw real vehicle graphics representation
-                if (obs.type === 'cng') {
-                    ctx.fillStyle = "#2ecc71"; // Green CNG
-                    ctx.fillRect(obs.x, obs.y, 35, 55);
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(obs.x + 5, obs.y + 10, 25, 15); // Windshield
-                } else if (obs.type === 'rickshaw') {
-                    ctx.fillStyle = "#e67e22"; // Rickshaw
-                    ctx.fillRect(obs.x + 5, obs.y, 25, 45);
-                } else if (obs.type === 'army') {
-                    ctx.fillStyle = "#34495e"; // Army truck/patrol
-                    ctx.fillRect(obs.x, obs.y, 40, 70);
-                    ctx.fillStyle = "#e74c3c";
-                    ctx.fillText("🚨 সেনা", obs.x + 5, obs.y - 5);
-                }
-
-                // Check collision with army/police when player is NOT hidden
-                if (!isHidden && obs.type === 'army' && Math.abs(obs.x - player.x) < 30 && Math.abs(obs.y - player.y) < 30) {
-                    lives--;
-                    document.getElementById("lives").innerText = "❤️".repeat(Math.max(0, lives));
-                    obstacles.splice(index, 1);
-                    alert("সেনাবাহিনীর হাতে ধরা পড়েছেন! সাবধান!");
-                    if (lives <= 0) {
-                        alert("গেম ওভার! সব শেষ!");
-                        location.reload();
-                    }
-                }
-
-                if (obs.y > canvas.height) {
-                    obstacles.splice(index, 1);
-                }
-            });
-
-            // 4. Draw Player & Gang (Gundas) around him if not hidden
-            if (!isHidden) {
-                // Draw Gundas (Sidekicks)
-                gundas.forEach(g => {
-                    ctx.fillStyle = "#3498db";
-                    ctx.beginPath();
-                    ctx.arc(player.x + g.offsetX, player.y + g.offsetY, 10, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-
-                // Main Collector Character
-                ctx.fillStyle = "#e74c3c";
-                ctx.beginPath();
-                ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = "white";
-                ctx.font = "10px Arial";
-                ctx.fillText("চাঁদাবাজ", player.x - 18, player.y - 22);
-            }
-
-            requestAnimationFrame(loop);
-        }
+        });
     </script>
 </body>
 </html>
