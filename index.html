@@ -3,29 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>চান্দা দে - Dhaka Chanda Collector</title>
-    <link rel="stylesheet" href="style.css">
+    <title>চান্দা দে - Chanda De</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1e272c;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        #landing-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800') no-repeat center center/cover;
+            padding: 20px;
+        }
+
+        .title-box h1 {
+            font-size: 45px;
+            color: #f1c40f;
+            text-shadow: 3px 3px #c0392b;
+            margin-bottom: 5px;
+        }
+
+        .tagline {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ecf0f1;
+            margin-bottom: 15px;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+
+        .rules {
+            font-size: 14px;
+            color: #bdc3c7;
+            max-width: 400px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .start-btn {
+            background-color: #f1c40f;
+            color: #2c3e50;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+
+        #game-screen {
+            display: none;
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin: auto;
+            height: 100vh;
+            background: #2f3640;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: rgba(0,0,0,0.7);
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        canvas {
+            display: block;
+            background: #596275;
+            margin: auto;
+        }
+
+        /* Joystick & On-screen controls */
+        .controls-overlay {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .joystick-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 40px);
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .joy-btn {
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: 2px solid #f1c40f;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .action-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: #27ae60;
+            color: white;
+            border: 2px solid #2ecc71;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .hide-btn {
+            background: #e67e22;
+            border-color: #f39c12;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <h1>🛺 চান্দা দে! (ঢাকা এডিশন) 🛺</h1>
-        
-        <div class="stats-board">
-            <span>লোকেশন: <strong id="location-name">ফার্মগেট</strong></span> | 
-            <span>চাঁদা: <strong id="score">0</strong> টাকা</span> | 
-            <span>লাইফ: <strong id="lives">❤️ ❤️ ❤️</strong></span>
+    <!-- Landing Page -->
+    <div id="landing-screen">
+        <div class="title-box">
+            <h1>চান্দা দে</h1>
+            <p>CHANDA DE (Dhaka Edition)</p>
         </div>
-        
-        <!-- গেমের ক্যানভাস -->
-        <canvas id="gameCanvas" width="450" height="650"></canvas>
-        
-        <div class="instructions">
-            <p>⬅️ ➡️ তীর চিহ্ন বা স্ক্রিন ট্যাপ করে ক্যারেক্টার ডানে-বায়ে সরান। গাড়ি ও রিকশায় ক্লিক করে চাঁদা তুলুন!</p>
-            <p style="color: #e74c3c; font-weight: bold;">⚠️ সতর্কবাণী: পুলিশ আসলে দ্রুত সরে যান বা লুকিয়ে পড়ুন!</p>
+        <div class="tagline">রাস্তা কি আপনার বাপের? আগে চাঁদা দেন!</div>
+        <div class="rules">
+            🛺 গাড়ি ও রিকশা থামিয়ে চাঁদা তুলুন。<br>
+            👥 সাথে থাকবে আপনার গেন্দা/সঙগীরা।<br>
+            🏠 সেনা বা পুলিশ আসলে রাস্তার পাশের ঘরে লুকিয়ে যান!<br>
+            🕹️ জয়েস্টিক দিয়ে চারদিকে ঘোরাফেরা করুন।
+        </div>
+        <button class="start-btn" onclick="startGame()">রাস্তায় নামেন</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen">
+        <div class="top-bar">
+            <div>চাঁদা: <span id="score">0</span>৳</div>
+            <div id="status-msg" style="color:#f1c40f;">অবস্থা: রাস্তায় সক্রিয়</div>
+            <div>লাইফ: <span id="lives">❤️❤️❤️</span></div>
+        </div>
+
+        <canvas id="gameCanvas" width="420" height="480"></canvas>
+
+        <!-- Controller & Actions -->
+        <div class="controls-overlay">
+            <div class="joystick-pad">
+                <div></div>
+                <button class="joy-btn" ontouchstart="setMove(0, -3)" onmousedown="setMove(0, -3)">⬆️</button>
+                <div></div>
+                <button class="joy-btn" ontouchstart="setMove(-3, 0)" onmousedown="setMove(-3, 0)">⬅️</button>
+                <button class="joy-btn" onclick="stopMove()">⏹️</button>
+                <button class="joy-btn" ontouchstart="setMove(3, 0)" onmousedown="setMove(3, 0)">➡️</button>
+                <div></div>
+                <button class="joy-btn" ontouchstart="setMove(0, 3)" onmousedown="setMove(0, 3)">⬇️</button>
+                <div></div>
+            </div>
+
+            <div class="action-btns">
+                <button class="action-btn" onclick="collectChanda()">💵 চাঁদা তুলুন</button>
+                <button class="action-btn hide-btn" onclick="toggleHideout()">🏠 ঘরে লুকান</button>
+            </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        function startGame() {
+            document.getElementById('landing-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            initGame();
+        }
+
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let score = 0;
+        let lives = 3;
+        let isHidden = false;
+
+        // Player & Gang (Gunda)
+        let player = { x: 200, y: 350, vx: 0, vy: 0, radius: 18 };
+        let gundas = [
+            { offsetX: -25, offsetY: 15 },
+            { offsetX: 25, offsetY: 15 }
+        ];
+
+        let obstacles = [];
+        let gameRunning = false;
+
+        function setMove(vx, vy) {
+            if (!isHidden) {
+                player.vx = vx;
+                player.vy = vy;
+            }
+        }
+
+        function stopMove() {
+            player.vx = 0;
+            player.vy = 0;
+        }
+
+        // Hideout mechanic (Lukanor ghor)
+        function toggleHideout() {
+            // Check if player is near the left or right side hideout house (e.g., x < 80 or x > 320)
+            if (player.x < 90 || player.x > 310) {
+                isHidden = !isHidden;
+                if (isHidden) {
+                    player.vx = 0; player.vy = 0;
+                    document.getElementById("status-msginnerText") = "অবস্থা: ঘরের ভেতর লুকানো!";
+                    document.getElementById("status-msg").innerText = "অবস্থা: ঘরে নিরাপদ 🏠";
+                } else {
+                    document.getElementById("status-msg").innerText = "অবস্থা: রাস্তায় সক্রিয়";
+                }
+            } else {
+                alert("লুকানোর ঘরের কাছাকাছি যান (রাস্তার দুই পাশের ঘরে)!");
+            }
+        }
+
+        function collectChanda() {
+            if (isHidden) return;
+            score += 50;
+            document.getElementById("score").innerText = score;
+        }
+
+        function initGame() {
+            gameRunning = true;
+            loop();
+        }
+
+        function loop() {
+            if (!gameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Draw Sidewalks & Hideout Houses (Lukanor ghor)
+            ctx.fillStyle = "#4b6584";
+            ctx.fillRect(0, 0, 70, canvas.height); // Left sidewalk & house zone
+            ctx.fillRect(canvas.width - 70, 0, 70, canvas.height); // Right sidewalk & house zone
+
+            // Draw Houses / Buildings on sides
+            ctx.fillStyle = "#84817a";
+            ctx.fillRect(10, 50, 50, 100); // Left House
+            ctx.fillRect(canvas.width - 60, 200, 50, 100); // Right House
+            
+            ctx.fillStyle = "#f1c40f";
+            ctx.font = "11px Arial";
+            ctx.fillText("🏠 সেফ হাউজ", 5, 40);
+            ctx.fillText("🏠 লুকানোর ঘর", canvas.width - 65, 190);
+
+            // Road surface
+            ctx.fillStyle = "#222f3e";
+            ctx.fillRect(70, 0, canvas.width - 140, canvas.height);
+
+            // Center road markings
+            ctx.strokeStyle = "#ffdd59";
+            ctx.lineWidth = 3;
+            ctx.setLineDash([15, 15]);
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.stroke();
+
+            // 2. Move Player freely if not hidden
+            if (!isHidden) {
+                player.x += player.vx;
+                player.y += player.vy;
+
+                // Boundaries
+                if (player.x < 75) player.x = 75;
+                if (player.x > canvas.width - 75) player.x = canvas.width - 75;
+                if (player.y < 30) player.y = 30;
+                if (player.y > canvas.height - 40) player.y = canvas.height - 40;
+            }
+
+            // 3. Draw Vehicles & Army/Police
+            if (Math.random() < 0.025) {
+                let types = ['cng', 'rickshaw', 'army'];
+                let type = types[Math.floor(Math.random() * types.length)];
+                obstacles.push({
+                    x: 90 + Math.random() * 200,
+                    y: -80,
+                    type: type,
+                    speed: type === 'army' ? 3.5 : 2
+                });
+            }
+
+            obstacles.forEach((obs, index) => {
+                obs.y += obs.speed;
+
+                // Draw real vehicle graphics representation
+                if (obs.type === 'cng') {
+                    ctx.fillStyle = "#2ecc71"; // Green CNG
+                    ctx.fillRect(obs.x, obs.y, 35, 55);
+                    ctx.fillStyle = "black";
+                    ctx.fillRect(obs.x + 5, obs.y + 10, 25, 15); // Windshield
+                } else if (obs.type === 'rickshaw') {
+                    ctx.fillStyle = "#e67e22"; // Rickshaw
+                    ctx.fillRect(obs.x + 5, obs.y, 25, 45);
+                } else if (obs.type === 'army') {
+                    ctx.fillStyle = "#34495e"; // Army truck/patrol
+                    ctx.fillRect(obs.x, obs.y, 40, 70);
+                    ctx.fillStyle = "#e74c3c";
+                    ctx.fillText("🚨 সেনা", obs.x + 5, obs.y - 5);
+                }
+
+                // Check collision with army/police when player is NOT hidden
+                if (!isHidden && obs.type === 'army' && Math.abs(obs.x - player.x) < 30 && Math.abs(obs.y - player.y) < 30) {
+                    lives--;
+                    document.getElementById("lives").innerText = "❤️".repeat(Math.max(0, lives));
+                    obstacles.splice(index, 1);
+                    alert("সেনাবাহিনীর হাতে ধরা পড়েছেন! সাবধান!");
+                    if (lives <= 0) {
+                        alert("গেম ওভার! সব শেষ!");
+                        location.reload();
+                    }
+                }
+
+                if (obs.y > canvas.height) {
+                    obstacles.splice(index, 1);
+                }
+            });
+
+            // 4. Draw Player & Gang (Gundas) around him if not hidden
+            if (!isHidden) {
+                // Draw Gundas (Sidekicks)
+                gundas.forEach(g => {
+                    ctx.fillStyle = "#3498db";
+                    ctx.beginPath();
+                    ctx.arc(player.x + g.offsetX, player.y + g.offsetY, 10, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Main Collector Character
+                ctx.fillStyle = "#e74c3c";
+                ctx.beginPath();
+                ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = "white";
+                ctx.font = "10px Arial";
+                ctx.fillText("চাঁদাবাজ", player.x - 18, player.y - 22);
+            }
+
+            requestAnimationFrame(loop);
+        }
+    </script>
 </body>
 </html>
