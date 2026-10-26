@@ -3,20 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>চান্দা দে - Chanda De</title>
+    <title>চান্দা দে - Dhaka Chanda Collector</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="game-container">
-        <h1>🛺 চান্দা দে! 🛺</h1>
-        <div id="score-board">মোট চাঁদা: <span id="score">0</span> টাকা</div>
+        <h1>🛺 চান্দা দে! (ঢাকা এডিশন) 🛺</h1>
         
-        <!-- গেমের ক্যানভাস বা খেলার জায়গা -->
-        <canvas id="gameCanvas" width="400" height="600"></canvas>
+        <div class="stats-board">
+            <span>লোকেশন: <strong id="location-name">ফার্মগেট</strong></span> | 
+            <span>চাঁদা: <strong id="score">0</strong> টাকা</span> | 
+            <span>লাইফ: <strong id="lives">❤️ ❤️ ❤️</strong></span>
+        </div>
+        
+        <!-- গেমের ক্যানভাস -->
+        <canvas id="gameCanvas" width="450" height="650"></canvas>
         
         <div class="instructions">
-            <p>গাড়ি আসলে ক্লিক করে চাঁদা তুলুন!</p>
+            <p>⬅️ ➡️ তীর চিহ্ন বা স্ক্রিন ট্যাপ করে ক্যারেক্টার ডানে-বায়ে সরান। গাড়ি ও রিকশায় ক্লিক করে চাঁদা তুলুন!</p>
+            <p style="color: #e74c3c; font-weight: bold;">⚠️ সতর্কবাণী: পুলিশ আসলে দ্রুত সরে যান বা লুকিয়ে পড়ুন!</p>
         </div>
     </div>
 
